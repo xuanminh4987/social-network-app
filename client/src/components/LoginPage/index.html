@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../libs/bootstrap/css/bootstrap.min.css">
+
+    <title>SNE</title>
+</head>
+<body>
+    <div class='container-fluid'>
+        <div class='row justify-content-center py-4 bg-custom'>
+            <div class="row justify-content-center main-p">
+                <div class="col-sm-4 box-width">
+                    <div class="logo-custom">
+                        <img class="w-75" src="https://i.ibb.co/JjZvZyp/logo-fullname.png" alt="">
+                    </div>
+                    <h3>Đăng nhập gần đây</h3>
+                    <p class='text-secondary'>Nhấp vào ảnh của bạn hoặc thêm tài khoản.</p>
+                    <div class="d-flex">
+                        <div class="position-relative bg-white me-3 card-custom rounded-custom">
+                            <span class="position-absolute text-center rounded-circle card-del-custom">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <img class="avatar-custom" src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t1.0-1/p160x160/102394858_699896963920090_4742175252288676967_o.jpg?_nc_cat=110&ccb=2&_nc_sid=dbb9e7&_nc_ohc=XWb_uAFCXhgAX-xPKNA&_nc_ht=scontent.fsgn2-6.fna&tp=6&oh=0ebc08d8ca0ec61c54c669a64e0c6fc9&oe=60287F30" alt="">
+                            <h5 class='py-2 px-1 m-0 text-center'>Minh</h5>
+                        </div>
+                        <div class="bg-white text-primary card-custom rounded-custom">
+                            <div class="avatar-custom">
+                                <h1><i class="fas fa-plus-circle"></i></h1>
+                            </div>
+                            <h5 class='py-2 px-1 m-0 text-center'>Thêm tài khoản</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 mt-5 box-width">
+                    <form class="mb-4 px-3 py-4 bg-white border form-shadow rounded-custom">
+                        <div class="mb-3 input-group">
+                            <div class="input-group-text">@</div>
+                            <input type="email" class="form-control" id="email" placeholder="Email">                        
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="password" placeholder="Mật khẩu">
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" id="login-btn" class="form-control btn-primary">Đăng nhập</button>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <a href="#">Quên mật khẩu</a>
+                        </div>
+                        <div class="mb-3 border"></div>
+                        <div class="mb-3">
+                            <button type="button" id="signup-btn" class="form-control btn-success">
+                                Tại tài khoản mới
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="getUsers-btn" class="form-control btn-secondary">
+                                Get Users
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center px-2">
+                        <span class="fw-bold">Tạo Trang</span> dành cho người nổi tiếng, nhãn hiệu hoặc doanh nghiệp.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row m-0 px-2' id="show-users-place"></div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/6184c439ae.js" crossorigin="anonymous"></script>
+    <script src="../../libs/jquery/jquery-3.5.1.js"></script>
+    <script src="../../libs/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(()=>{
+            $('#login-btn').click(()=>{
+                const email = $('#email').val()
+                const password = $('#password').val()
+
+                if(!email){
+                    $('.alert').remove()
+                    $('.bg-custom').prepend(`
+                        <div class="alert alert-warning w-75 postion-absolute rounded" role="alert">
+                            Bạn chưa nhập Email.
+                        </div>
+                    `)
+                    return
+                }
+
+                if(!password){
+                    $('.alert').remove()
+                    $('.bg-custom').prepend(`
+                        <div class="alert alert-warning w-75 postion-absolute rounded" role="alert">
+                            Bạn chưa nhập mật khẩu.
+                        </div>
+                    `)
+                    return
+                }
+
+                $.ajax({
+                    url: 'http://localhost:3000/login',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        email,
+                        password
+                    }),
+                    contentType: 'application/json',
+                }).done(data => {
+                    if(data.status === 200){
+                        $('.alert').remove()
+                        $('.bg-custom').prepend(`
+                            <div class="alert alert-success w-75 postion-absolute rounded" role="alert">
+                                Đăng nhập thành công.
+                            </div>
+                        `)
+                        
+                        localStorage.setItem('email', email)
+
+                        setTimeout(()=>{
+                            window.location.replace('../HomePage/index.html')
+                        }, 500)
+                    } else{
+                        $('.alert').remove()
+                        $('.bg-custom').prepend(`
+                            <div class="alert alert-danger w-75 postion-absolute rounded" role="alert">
+                                ${data.message}
+                            </div>
+                        `)
+                    }
+                })
+            })
+
+            $("#signup-btn").click(()=>{
+                    window.location.replace('../SignupPage/index.html')
+            })
+
+            $(window).resize(()=>{
+                if($(this).width() < 900){
+                    $('.box-width').addClass('text-center')
+                    $('.d-flex').addClass('justify-content-center')
+                } else{
+                    $('.box-width').removeClass('text-center')
+                    $('.d-flex').removeClass('justify-content-center')
+                }
+            })
+
+            $('#getUsers-btn').click(() => {
+                $('#show-users-place').html(``)
+
+                $.ajax({
+                    url: 'http://localhost:3000/users',
+                    type: 'GET',
+                    contentType: 'application/json'
+                }).done(data => {
+                    data.users.forEach(user => {
+                        $('#show-users-place').append(`
+                            <div class="row col-12 my-2 px-0 text-center rounded user-card">
+                                <div class="col p-2 border">${user.fname} ${user.lname}</div>
+                                <div class="col p-2 border">${user.email}</div>
+                                <div class="col p-2 border">${user.password}</div>
+                                <div class="col p-2 border">${user.birthDay}</div>
+                                <div class="col p-2 border">${user.gender}</div>    
+                            </div>
+                        `)
+                    })
+                })
+            })
+        })
+    </script>
+</body>
+</html>

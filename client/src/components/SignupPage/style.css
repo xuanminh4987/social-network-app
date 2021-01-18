@@ -1,0 +1,27 @@
+.container-fluid{
+    height: 100vh;
+}
+
+.box-width{
+    max-width: 450px !important;
+    min-width: 450px !important;
+}
+
+.rounded-custom{
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+}
+
+.radio-custom{
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.radio-custom:hover{
+    border-color: #0d6efd;
+}
+
+.fs-custom{
+    font-size: .8em;
+}
